@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>親師生互動系統V2</title>
+    <title>親師生互動系統v3</title>
     <style>
         /* ================= CSS 樣式區 ================= */
         body { background-color: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 20px; color: #333; }
@@ -19,10 +19,7 @@
         .btn-secondary { background-color: #f5f5f5; color: #666; box-shadow: none; }
         .btn-upload { background-color: #e0e0e0; color: #333; box-shadow: none; }
         .hidden { display: none; }
-        .link-text { color: #576b95; font-size: 14px; text-decoration: underline; cursor: pointer; }
         .text-break { word-break: break-all; white-space: pre-wrap; line-height: 1.5; }
-        
-        /* 載入動畫 */
         .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #07c160; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -38,7 +35,7 @@
     </div>
 
     <div id="page-login">
-        <div class="page-title">親師生互動系統v2</div>
+        <div class="page-title">親師生互動系統v3</div>
         <div class="result-card">
             <div class="label">帳號</div>
             <input type="text" id="login-id" class="input-field" placeholder="請輸入帳號">
@@ -47,74 +44,48 @@
             <button class="btn" onclick="doLogin()">登入</button>
         </div>
         <div style="text-align:center; margin-top:20px;">
-            <span class="link-text" onclick="showPage('register')">沒有帳號？點此註冊</span>
+            <span style="color:#576b95;cursor:pointer;" onclick="showPage('register')">沒有帳號？點此註冊</span>
         </div>
     </div>
 
     <div id="page-register" class="hidden">
         <div class="page-title">註冊新帳號</div>
         <div class="result-card">
-            <input type="text" id="reg-id" class="input-field" placeholder="設定帳號 (例如學號)">
+            <input type="text" id="reg-id" class="input-field" placeholder="設定帳號">
             <input type="password" id="reg-pwd" class="input-field" placeholder="設定密碼">
             <input type="text" id="reg-name" class="input-field" placeholder="您的姓名">
-            
             <div style="margin: 20px 0; display:flex; gap:20px;">
-                <label style="display:flex; align-items:center;"><input type="radio" name="role" value="student" checked> 學生</label>
-                <label style="display:flex; align-items:center;"><input type="radio" name="role" value="parent"> 家長</label>
+                <label><input type="radio" name="role" value="student" checked> 學生</label>
+                <label><input type="radio" name="role" value="parent"> 家長</label>
             </div>
-
-            <button class="btn" onclick="doRegister()">註冊並返回</button>
+            <button class="btn" onclick="doRegister()">註冊</button>
         </div>
         <button class="btn btn-secondary" onclick="showPage('login')">取消</button>
     </div>
 
     <div id="page-dashboard" class="hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <div style="font-weight:bold; font-size:18px;">Hi, <span id="user-name"></span></div>
-            <button class="btn btn-secondary" style="width:auto; height:36px; margin:0;" onclick="doLogout()">登出</button>
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <div style="font-weight:bold;">Hi, <span id="user-name"></span></div>
+            <div style="color:red;cursor:pointer;" onclick="doLogout()">登出</div>
         </div>
-
         <div id="view-student" class="hidden">
             <div class="result-card">
-                <div style="font-weight:bold; margin-bottom:15px; font-size:18px;">📝 今日作業上傳</div>
-                <textarea id="student-answer" class="input-area" placeholder="請輸入今日回答..."></textarea>
-                
+                <textarea id="student-answer" class="input-area" placeholder="輸入回答..."></textarea>
                 <img id="img-preview" class="preview hidden">
                 <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
-                
-                <button class="btn btn-upload" onclick="document.getElementById('file-input').click()">📷 拍照或選圖</button>
+                <button class="btn btn-upload" onclick="document.getElementById('file-input').click()">📷 拍照/選圖</button>
                 <button class="btn" onclick="doUpload()">送出作業</button>
             </div>
         </div>
-
         <div id="view-parent" class="hidden">
-            <div id="parent-bind" class="result-card hidden" style="text-align:center;">
-                <div style="margin-bottom:20px; font-size:18px;">您尚未綁定孩子帳號</div>
-                <input type="text" id="child-id" class="input-field" placeholder="請輸入孩子的帳號">
+            <div id="parent-bind" class="result-card hidden">
+                <input type="text" id="child-id" class="input-field" placeholder="孩子帳號">
                 <button class="btn" onclick="doBindChild()">綁定</button>
             </div>
-
             <div id="parent-data" class="hidden">
-                <div style="margin-bottom:15px; font-weight:bold; color:#333; font-size:18px;">👶 孩子今日學習狀況</div>
-                
-                <div id="query-result-card" class="result-card hidden">
-                    <div class="label">上傳時間</div>
-                    <div id="res-time" class="text-break" style="margin-bottom:15px;"></div>
-                    <div class="label">姓名</div>
-                    <div id="res-name" class="text-break" style="margin-bottom:15px;"></div>
-                    <div class="label" style="border-top:1px solid #eee; padding-top:10px;">作業回答</div>
-                    <div id="res-answer" class="text-break" style="margin-bottom:15px;"></div>
-                    
-                    <div id="res-photo-box" class="hidden" style="background:#f0f8ff; padding:10px; border-radius:8px;">
-                        <div class="label">🖼️ 照片連結</div>
-                        <a id="res-photo-link" href="#" target="_blank" class="link-text text-break">點擊查看照片</a>
-                    </div>
+                <div id="query-result-card" class="result-card">
+                    <div id="res-content" class="text-break">正在讀取...</div>
                 </div>
-
-                <div id="no-data-msg" class="hidden" style="text-align:center; color:#999; margin:40px 0;">
-                    孩子今天還沒上傳作業喔！
-                </div>
-
                 <button class="btn btn-secondary" onclick="refreshQuery()">🔄 重新整理</button>
             </div>
         </div>
@@ -122,167 +93,136 @@
 </div>
 
 <script>
-    // 🔴 這裡請貼上你剛剛在瀏覽器打開能看到「✅ 系統連線成功...」的那個網址！
+    // 🔴 必須確保這串網址正確且結尾是 /exec
     const API_URL = 'https://script.google.com/macros/s/AKfycbz_N2pDxYIpFK1TXOESWsq_31rYHxH9A9dDPAsXqFh9ovsySir8LNb2oFftosOeLB-U/exec';
 
     let currentUser = null;
     let base64Image = "";
 
     function showPage(pageId) {
-        ['page-login', 'page-register', 'page-dashboard'].forEach(id => {
-            document.getElementById(id).classList.add('hidden');
-        });
+        ['page-login', 'page-register', 'page-dashboard'].forEach(id => document.getElementById(id).classList.add('hidden'));
         document.getElementById('page-' + pageId).classList.remove('hidden');
     }
 
     function toggleLoading(show) {
-        const el = document.getElementById('loading');
-        if(show) el.classList.remove('hidden');
-        else el.classList.add('hidden');
+        document.getElementById('loading').classList.toggle('hidden', !show);
     }
 
-    // --- API 呼叫 (修正版：解決卡死問題) ---
+    // --- 加強版 API 呼叫 ---
     function callApi(data, onSuccess) {
+        console.log("嘗試發送請求:", data.action);
         toggleLoading(true);
-        
-        // 使用 text/plain 避免 Google Script 拒絕 CORS 預檢
+
         fetch(API_URL, {
             method: 'POST',
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8" 
-            },
+            mode: 'cors', // 確保使用跨網域模式
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify(data)
         })
-        .then(res => res.json())
-        .then(response => {
+        .then(res => {
+            console.log("收到回應狀態:", res.status);
+            return res.json();
+        })
+        .then(res => {
+            console.log("後端資料:", res);
             toggleLoading(false);
-            if (response.status === 'success') {
-                onSuccess(response);
-            } else {
-                alert('系統訊息: ' + response.message);
-            }
+            if (res.status === 'success') onSuccess(res);
+            else alert("系統訊息: " + res.message);
         })
         .catch(err => {
+            console.error("連線錯誤:", err);
             toggleLoading(false);
-            console.error(err);
-            // 如果後端連線成功，但處理邏輯出錯，通常不會進到這裡
-            // 這裡通常是網路斷線或網址錯誤
-            alert('連線失敗，請確認網址是否正確更新到 index.html');
+            alert("連線失敗！請檢查：\n1. Google Script 權限是否設為「任何人」\n2. 網址是否複製正確");
         });
     }
 
-    // --- 註冊 ---
-    function doRegister() {
-        const id = document.getElementById('reg-id').value;
-        const pwd = document.getElementById('reg-pwd').value;
-        const name = document.getElementById('reg-name').value;
-        const role = document.querySelector('input[name="role"]:checked').value;
-        if(!id || !pwd || !name) return alert('請填寫完整');
-        callApi({ action: 'register', id, password: pwd, name, role }, () => {
-            alert('註冊成功，請登入');
-            showPage('login');
-        });
-    }
-
-    // --- 登入 ---
     function doLogin() {
         const id = document.getElementById('login-id').value;
         const pwd = document.getElementById('login-pwd').value;
-        if(!id || !pwd) return alert('請輸入帳號密碼');
-        callApi({ action: 'login', id, password: pwd }, (res) => {
+        if(!id || !pwd) return alert("請輸入帳密");
+        callApi({ action: 'login', id, password: pwd }, res => {
             currentUser = res.user;
             document.getElementById('user-name').innerText = currentUser.name;
             showPage('dashboard');
-            document.getElementById('view-student').classList.add('hidden');
-            document.getElementById('view-parent').classList.add('hidden');
             if (currentUser.role === 'student') {
                 document.getElementById('view-student').classList.remove('hidden');
+                document.getElementById('view-parent').classList.add('hidden');
             } else {
+                document.getElementById('view-student').classList.add('hidden');
                 document.getElementById('view-parent').classList.remove('hidden');
                 checkParentState();
             }
         });
     }
 
-    function doLogout() {
-        currentUser = null;
-        document.getElementById('login-id').value = '';
-        document.getElementById('login-pwd').value = '';
-        showPage('login');
+    function doRegister() {
+        const id = document.getElementById('reg-id').value;
+        const pwd = document.getElementById('reg-pwd').value;
+        const name = document.getElementById('reg-name').value;
+        const role = document.querySelector('input[name="role"]:checked').value;
+        callApi({ action: 'register', id, password: pwd, name, role }, () => {
+            alert("註冊成功");
+            showPage('login');
+        });
     }
 
-    // --- 學生功能 ---
-    function handleFileSelect(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                base64Image = e.target.result.split(',')[1];
-                const img = document.getElementById('img-preview');
-                img.src = e.target.result;
-                img.classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
-        }
+    function handleFileSelect(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            base64Image = e.target.result.split(',')[1];
+            document.getElementById('img-preview').src = e.target.result;
+            document.getElementById('img-preview').classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
     }
 
     function doUpload() {
         const answer = document.getElementById('student-answer').value;
-        callApi({
-            action: 'upload',
-            id: currentUser.id,
-            name: currentUser.name,
-            answer: answer,
-            image_data: base64Image
-        }, () => {
-            alert('上傳成功！');
-            document.getElementById('student-answer').value = '';
+        callApi({ action: 'upload', id: currentUser.id, name: currentUser.name, answer, image_data: base64Image }, () => {
+            alert("上傳成功");
+            document.getElementById('student-answer').value = "";
             document.getElementById('img-preview').classList.add('hidden');
             base64Image = "";
         });
     }
 
-    // --- 家長功能 ---
     function checkParentState() {
+        const bindView = document.getElementById('parent-bind');
+        const dataView = document.getElementById('parent-data');
         if (!currentUser.childId) {
-            document.getElementById('parent-bind').classList.remove('hidden');
-            document.getElementById('parent-data').classList.add('hidden');
+            bindView.classList.remove('hidden');
+            dataView.classList.add('hidden');
         } else {
-            document.getElementById('parent-bind').classList.add('hidden');
-            document.getElementById('parent-data').classList.remove('hidden');
+            bindView.classList.add('hidden');
+            dataView.classList.remove('hidden');
             refreshQuery();
         }
     }
 
     function doBindChild() {
-        const childId = document.getElementById('child-id').value;
-        if(!childId) return;
-        callApi({ action: 'bind', parentId: currentUser.id, childId }, (res) => {
+        const cid = document.getElementById('child-id').value;
+        callApi({ action: 'bind', parentId: currentUser.id, childId: cid }, res => {
             currentUser.childId = res.childId;
-            alert('綁定成功');
+            alert("綁定成功");
             checkParentState();
         });
     }
 
     function refreshQuery() {
-        if(!currentUser.childId) return;
-        callApi({ action: 'query', targetId: currentUser.childId }, (res) => {
-            document.getElementById('no-data-msg').classList.add('hidden');
-            document.getElementById('query-result-card').classList.remove('hidden');
+        callApi({ action: 'query', targetId: currentUser.childId }, res => {
             const d = res.data;
-            document.getElementById('res-time').innerText = new Date(d.time).toLocaleString();
-            document.getElementById('res-name').innerText = d.name;
-            document.getElementById('res-answer').innerText = d.answer;
-            if (d.photoUrl && d.photoUrl !== '無照片') {
-                document.getElementById('res-photo-box').classList.remove('hidden');
-                document.getElementById('res-photo-link').href = d.photoUrl;
-            } else {
-                document.getElementById('res-photo-box').classList.add('hidden');
+            let html = `<div>時間：${new Date(d.time).toLocaleString()}</div>`;
+            html += `<div>姓名：${d.name}</div>`;
+            html += `<div style="margin-top:10px;">回答：${d.answer}</div>`;
+            if(d.photoUrl && d.photoUrl !== '無照片') {
+                html += `<div style="margin-top:10px;"><a href="${d.photoUrl}" target="_blank" style="color:#007aff;">查看照片</a></div>`;
             }
-        }); 
+            document.getElementById('res-content').innerHTML = html;
+        });
     }
+
+    function doLogout() { location.reload(); }
 </script>
-
 </body>
-
 </html>
