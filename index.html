@@ -5,67 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>親師生互動系統</title>
     <style>
-        /* ================= CSS 樣式區 (保持你喜歡的圓潤風格) ================= */
-        body {
-            background-color: #f0f2f5;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
+        /* ================= CSS 樣式區 ================= */
+        body { background-color: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 20px; color: #333; }
         .container { max-width: 480px; margin: 0 auto; }
-        .page-title {
-            font-size: 24px; font-weight: 600; text-align: center;
-            margin-bottom: 30px; color: #2c3e50; margin-top: 10px;
-        }
-        .result-card {
-            background: #ffffff; padding: 25px; border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px;
-        }
+        .page-title { font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 30px; color: #2c3e50; margin-top: 10px; }
+        .result-card { background: #ffffff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .label { font-size: 14px; color: #666; margin-bottom: 8px; font-weight: 500; }
-        .input-field {
-            background: #f9f9f9; border: 1px solid #eee;
-            height: 48px; width: 100%; padding: 0 15px;
-            border-radius: 10px; box-sizing: border-box;
-            font-size: 16px; margin-bottom: 20px; outline: none;
-            transition: border 0.3s;
-        }
+        .input-field { background: #f9f9f9; border: 1px solid #eee; height: 48px; width: 100%; padding: 0 15px; border-radius: 10px; box-sizing: border-box; font-size: 16px; margin-bottom: 20px; outline: none; transition: border 0.3s; }
         .input-field:focus { border-color: #07c160; background: #fff; }
-        .input-area {
-            background: #f9f9f9; border: 1px solid #eee;
-            width: 100%; height: 100px; padding: 15px;
-            border-radius: 10px; box-sizing: border-box;
-            font-size: 16px; margin-bottom: 20px; resize: none; outline: none;
-        }
-        .btn {
-            background-color: #07c160; color: white; border: none;
-            width: 100%; height: 48px; border-radius: 25px;
-            font-size: 16px; font-weight: 600; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(7, 193, 96, 0.2); margin-bottom: 15px;
-        }
+        .input-area { background: #f9f9f9; border: 1px solid #eee; width: 100%; height: 100px; padding: 15px; border-radius: 10px; box-sizing: border-box; font-size: 16px; margin-bottom: 20px; resize: none; outline: none; }
+        .btn { background-color: #07c160; color: white; border: none; width: 100%; height: 48px; border-radius: 25px; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(7, 193, 96, 0.2); margin-bottom: 15px; }
         .btn:active { transform: scale(0.98); }
         .btn-secondary { background-color: #f5f5f5; color: #666; box-shadow: none; }
         .btn-upload { background-color: #e0e0e0; color: #333; box-shadow: none; }
-        
         .hidden { display: none; }
         .link-text { color: #576b95; font-size: 14px; text-decoration: underline; cursor: pointer; }
         .text-break { word-break: break-all; white-space: pre-wrap; line-height: 1.5; }
         
         /* 載入動畫 */
-        .loading-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.8); z-index: 999;
-            display: flex; justify-content: center; align-items: center;
-            flex-direction: column;
-        }
-        .spinner {
-            border: 4px solid #f3f3f3; border-top: 4px solid #07c160;
-            border-radius: 50%; width: 40px; height: 40px;
-            animation: spin 1s linear infinite; margin-bottom: 10px;
-        }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #07c160; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
         img.preview { width: 100%; height: 200px; object-fit: contain; background: #eee; border-radius: 8px; margin-bottom: 15px; }
     </style>
 </head>
@@ -162,13 +122,12 @@
 </div>
 
 <script>
-    // 🔴 請務必替換成你的 Google Apps Script 網址 (結尾是 /exec)
+    // 🔴 這裡請貼上你剛剛在瀏覽器打開能看到「✅ 系統連線成功...」的那個網址！
     const API_URL = 'https://script.google.com/macros/s/AKfycbwMJGkkp-TQwJX02Wa7FORcmotd1UXbO2I55Iyj4KIiCvEJ0_Uh3T3yKg3AZRubOuZc/exec';
 
     let currentUser = null;
     let base64Image = "";
 
-    // --- 頁面切換 ---
     function showPage(pageId) {
         ['page-login', 'page-register', 'page-dashboard'].forEach(id => {
             document.getElementById(id).classList.add('hidden');
@@ -182,13 +141,16 @@
         else el.classList.add('hidden');
     }
 
-    // --- API 呼叫 (解決 CORS 問題) ---
-    // Google Script Web App 必須使用 text/plain 發送 POST 以避免 CORS 預檢失敗
+    // --- API 呼叫 (修正版：解決卡死問題) ---
     function callApi(data, onSuccess) {
         toggleLoading(true);
         
+        // 使用 text/plain 避免 Google Script 拒絕 CORS 預檢
         fetch(API_URL, {
             method: 'POST',
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8" 
+            },
             body: JSON.stringify(data)
         })
         .then(res => res.json())
@@ -197,13 +159,15 @@
             if (response.status === 'success') {
                 onSuccess(response);
             } else {
-                alert('錯誤: ' + response.message);
+                alert('系統訊息: ' + response.message);
             }
         })
         .catch(err => {
             toggleLoading(false);
             console.error(err);
-            alert('連線失敗，請檢查網路');
+            // 如果後端連線成功，但處理邏輯出錯，通常不會進到這裡
+            // 這裡通常是網路斷線或網址錯誤
+            alert('連線失敗，請確認網址是否正確更新到 index.html');
         });
     }
 
@@ -213,9 +177,7 @@
         const pwd = document.getElementById('reg-pwd').value;
         const name = document.getElementById('reg-name').value;
         const role = document.querySelector('input[name="role"]:checked').value;
-
         if(!id || !pwd || !name) return alert('請填寫完整');
-
         callApi({ action: 'register', id, password: pwd, name, role }, () => {
             alert('註冊成功，請登入');
             showPage('login');
@@ -227,16 +189,12 @@
         const id = document.getElementById('login-id').value;
         const pwd = document.getElementById('login-pwd').value;
         if(!id || !pwd) return alert('請輸入帳號密碼');
-
         callApi({ action: 'login', id, password: pwd }, (res) => {
             currentUser = res.user;
             document.getElementById('user-name').innerText = currentUser.name;
             showPage('dashboard');
-            
-            // 根據身分顯示介面
             document.getElementById('view-student').classList.add('hidden');
             document.getElementById('view-parent').classList.add('hidden');
-
             if (currentUser.role === 'student') {
                 document.getElementById('view-student').classList.remove('hidden');
             } else {
@@ -259,7 +217,7 @@
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                base64Image = e.target.result.split(',')[1]; // 只取 Base64 部分
+                base64Image = e.target.result.split(',')[1];
                 const img = document.getElementById('img-preview');
                 img.src = e.target.result;
                 img.classList.remove('hidden');
@@ -311,12 +269,10 @@
         callApi({ action: 'query', targetId: currentUser.childId }, (res) => {
             document.getElementById('no-data-msg').classList.add('hidden');
             document.getElementById('query-result-card').classList.remove('hidden');
-            
             const d = res.data;
             document.getElementById('res-time').innerText = new Date(d.time).toLocaleString();
             document.getElementById('res-name').innerText = d.name;
             document.getElementById('res-answer').innerText = d.answer;
-            
             if (d.photoUrl && d.photoUrl !== '無照片') {
                 document.getElementById('res-photo-box').classList.remove('hidden');
                 document.getElementById('res-photo-link').href = d.photoUrl;
@@ -324,12 +280,8 @@
                 document.getElementById('res-photo-box').classList.add('hidden');
             }
         }); 
-        // 這裡需要處理查無資料的情況，修改後的 callApi 會 alert 錯誤，
-        // 實務上可以改寫 callApi 讓它不 alert 而是回傳 null
     }
 </script>
 
 </body>
-
 </html>
-
